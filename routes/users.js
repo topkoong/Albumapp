@@ -4,6 +4,16 @@ var firebase = require('firebase');
 var admin = require("firebase-admin");
 var fbRef = admin.database();
 //var ref = db.ref("users");
+// Initialize Firebase
+var config = {
+  apiKey: "AIzaSyCSzizUIhA4bnf2AolcCfq64CiCRKoGqjs",
+  authDomain: "albumtop-16a6b.firebaseapp.com",
+  databaseURL: "https://albumtop-16a6b.firebaseio.com",
+  projectId: "albumtop-16a6b",
+  storageBucket: "albumtop-16a6b.appspot.com",
+  messagingSenderId: "1070025245415"
+};
+firebase.initializeApp(config);
 
 router.get('/register', function(req, res, next)  {
   res.render('users/register');
@@ -37,30 +47,31 @@ router.post('/register', function(req, res, next) {
             errors: errors
         });
     } else {
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then(
-            function(user){
-                console.log("Successfully created user with uid:", user.uid);
-                var user = {
-                    uid: user.uid,
-                    email: email,
-                    first_name: first_name,
-                    last_name: last_name,
-                    location: location,
-                    fav_genres: fav_genres,
-                    fav_artists: fav_artists
-                }
-
-                var userRef = fbRef.ref('users');
-                userRef.push().set(user);
-
-                req.flash('success_msg', 'You are now registered and can login');
-                res.redirect('/users/login');
+        admin.auth().createUser({
+          email: email,
+          password: password
+        })
+        .then(function(user){
+            console.log("Successfully created user with uid:", user.uid);
+            var user = {
+                uid: user.uid,
+                email: email,
+                first_name: first_name,
+                last_name: last_name,
+                location: location,
+                fav_genres: fav_genres,
+                fav_artists: fav_artists
             }
-        )
-        .catch(function(error){
-            console.log("Error creating user: ", error);
-        });
+            var userRef = fbRef.ref('users');
+            userRef.push().set(user);
+
+            req.flash('success_msg', 'You are now registered and can login');
+            res.redirect('/users/login');
+        }
+          )
+          .catch(function(error){
+              console.log("Error creating user: ", error);
+          });
     }
 });
 

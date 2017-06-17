@@ -3,12 +3,8 @@ var router = express.Router();
 var firebase = require('firebase');
 var admin = require("firebase-admin");
 var db = admin.database();
-var ref = db.ref("genres");
 var multer = require('multer');
 var upload = multer({dest: './public/images/uploads'});
-ref.once("value", function(snapshot) {
-  console.log(snapshot.val());
-});
 
 router.get('*', function(req, res, next) {
 	// Check Authentication
@@ -41,14 +37,14 @@ router.get('/', function(req, res, next) {
         });
       }
     });
-    res.render('albums/index', {albums: albums});
+    res.render('albums/index',{albums: albums});
   });
 });
 // Fetch genre on album add page (Form)
 // We also have to fetch the genre from the database.
 
 router.get('/add', function(req, res, next) {
-  var genreRef = ref;
+  var genreRef = db.ref("genres");
   genreRef.once('value', function(snapshot) {
     var data = [];
     snapshot.forEach(function(childSnapshot) {
@@ -56,7 +52,7 @@ router.get('/add', function(req, res, next) {
       var childData = childSnapshot.val();
       data.push({id: key, name: childData.name});
     });
-    res.render('albums/add', {genres: data}); // pass data in
+    res.render('albums/add',{genres: data});
   });
 });
 
@@ -99,7 +95,7 @@ router.post('/add', upload.single('cover'), function(req, res, next) {
 
 router.get('/details/:id', function(req, res) {
   var id = req.params.id;
-  var albumRef = db.ref("albums/" + id);
+  var albumRef = db.ref("albums/"+id);
   albumRef.once('value', function(snapshot) {
     var album = snapshot.val();
     res.render('albums/details', {

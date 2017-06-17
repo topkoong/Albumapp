@@ -14,7 +14,7 @@
     "body-parser": "*",
     "connect-flash": "*",
     "cookie-parser": "*",
-    "ejs": "*",
+    "ejs": "^2.5.6",
     "express": "^4.15.3",
     "express-session": "*",
     "express-validator": "*",

@@ -14,16 +14,7 @@ admin.initializeApp({
   credential: admin.credential.cert('albumtop-16a6b-firebase-adminsdk-h19j2-a6c6df8af2.json'),
   databaseURL: "https://albumtop-16a6b.firebaseio.com"
 });
-// Initialize Firebase
-var config = {
-  apiKey: "AIzaSyCSzizUIhA4bnf2AolcCfq64CiCRKoGqjs",
-  authDomain: "albumtop-16a6b.firebaseapp.com",
-  databaseURL: "https://albumtop-16a6b.firebaseio.com",
-  projectId: "albumtop-16a6b",
-  storageBucket: "albumtop-16a6b.appspot.com",
-  messagingSenderId: "1070025245415"
-};
-firebase.initializeApp(config);
+
 var db = admin.database();
 // Route Files
 var routes = require('./routes/index');
