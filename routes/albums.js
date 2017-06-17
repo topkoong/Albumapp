@@ -12,8 +12,8 @@ ref.once("value", function(snapshot) {
 
 router.get('*', function(req, res, next) {
 	// Check Authentication
-	if(firebase.auth().currentUser == null){ //check to see if we're logged in or not.
-	  	res.redirect('/users/login');
+	if(firebase.auth().currentUser == null){
+    res.redirect('/users/login');
 	}
 	next();
 });
@@ -32,9 +32,9 @@ router.get('/', function(req, res, next) {
         albums.push({
           id: key,
           artist: childData.artist,
-          title: childData.title,
           genre: childData.genre,
           info: childData.info,
+          title: childData.title,
           label: childData.label,
           tracks: childData.tracks,
           cover: childData.cover
@@ -114,7 +114,7 @@ router.get('/details/:id', function(req, res) {
 // We also have to fetch the genre to display in our form.
 router.get('/edit/:id', function(req, res, next) {
   var id = req.params.id;
-  var albumRef = db.ref("albums/" + id);
+  var albumRef = db.ref("albums/"+id);
 
   var genreRef = ref;
   genreRef.once('value', function(snapshot) {
@@ -138,7 +138,7 @@ router.get('/edit/:id', function(req, res, next) {
 // Update data stored in database on the album edit page
 router.post('/edit/:id', upload.single('cover'), function(req, res, next) {
   var id = req.params.id;
-  var albumRef = db.ref("albums/" + id);
+  var albumRef = db.ref("albums/"+id);
   // Check File Upload
   if (req.file) {
     console.log('Uploading File...');
@@ -173,7 +173,7 @@ router.post('/edit/:id', upload.single('cover'), function(req, res, next) {
   }
 
   req.flash('success_msg', 'Album Updated');
-  res.redirect('/albums/details/' + id);
+  res.redirect('/albums/details/'+id);
 });
 
 // Delete

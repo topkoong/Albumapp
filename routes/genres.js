@@ -10,8 +10,8 @@ ref.once("value", function(snapshot) {
 
 router.get('*', function(req, res, next) {
 	// Check Authentication
-	if(firebase.auth().currentUser == null){ //check to see if we're logged in or not.
-	  	res.redirect('/users/login');
+	if(firebase.auth().currentUser == null){
+    res.redirect('/users/login');
 	}
 	next();
 });

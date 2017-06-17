@@ -82,17 +82,17 @@ app.use(function (req, res, next) {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
-  res.locals.authdata = firebase.auth().currentUser; // it tells us if we're logged in or not.
+  res.locals.authdata = firebase.auth().currentUser;
   res.locals.page = req.url;
   next();
 });
 
 // Get User Info
-app.get('*', function(req, res, next){ // we're setting a route to anything
-  if(firebase.auth().currentUser != null){
+// we're setting a route to anything
+app.get('*', function(req, res, next){
+  if(firebase.auth().currentUser != null) {
     var userRef = db.ref('users');
-    // query to find the user that has the same uid
-    userRef.orderByChild("uid").startAt(firebase.auth().currentUser.uid).endAt(firebase.auth().currentUser.uid).on("child_added", function(snapshot) {
+    userRef.orderByChild('uid').startAt(firebase.auth().currentUser.uid).endAt(firebase.auth().currentUser.uid).on("child_added", function(snapshot) {
       res.locals.user = snapshot.val();
     });
   }
