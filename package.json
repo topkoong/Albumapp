@@ -1,0 +1,26 @@
+{
+  "name": "albumz",
+  "version": "1.0.0",
+  "description": "Music album manager",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Theerut Foongkiatcharoen",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.3.0",
+    "body-parser": "*",
+    "connect-flash": "*",
+    "cookie-parser": "*",
+    "ejs": "*",
+    "express": "^4.15.3",
+    "express-session": "*",
+    "express-validator": "*",
+    "firebase": "^4.1.2",
+    "firebase-admin": "^5.0.0",
+    "morgan": "*",
+    "multer": "*",
+    "path": "*"
+  }
+}
