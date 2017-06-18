@@ -15,6 +15,17 @@ admin.initializeApp({
   databaseURL: "https://albumtop-16a6b.firebaseio.com"
 });
 
+// Initialize Firebase
+var config = {
+  apiKey: "AIzaSyCSzizUIhA4bnf2AolcCfq64CiCRKoGqjs",
+  authDomain: "albumtop-16a6b.firebaseapp.com",
+  databaseURL: "https://albumtop-16a6b.firebaseio.com",
+  projectId: "albumtop-16a6b",
+  storageBucket: "albumtop-16a6b.appspot.com",
+  messagingSenderId: "1070025245415"
+};
+firebase.initializeApp(config);
+
 var db = admin.database();
 // Route Files
 var routes = require('./routes/index');
@@ -81,13 +92,23 @@ app.use(function (req, res, next) {
 // Get User Info
 // we're setting a route to anything
 app.get('*', function(req, res, next){
-  if(firebase.auth().currentUser != null) {
-    var userRef = db.ref('users');
-    userRef.orderByChild('uid').startAt(firebase.auth().currentUser.uid).endAt(firebase.auth().currentUser.uid).on("child_added", function(snapshot) {
-      res.locals.user = snapshot.val();
-    });
-  }
-  next();
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      // User is signed in.
+      var userRef = db.ref('users');
+      userRef.orderByChild("uid").startAt(firebase.auth().currentUser.uid).endAt(firebase.auth().currentUser.uid).on("child_added", function(snapshot) {
+        res.locals.user = snapshot.val();
+      });
+    }
+    next();
+  });
+  // if(firebase.auth().currentUser != null){
+  //   var userRef = db.ref('users');
+  //   userRef.orderByChild("uid").startAt(firebase.auth().currentUser.uid).endAt(firebase.auth().currentUser.uid).on("child_added", function(snapshot) {
+  //     res.locals.user = snapshot.val();
+  //   });
+  // }
+  // next();
 });
 
 // Routes

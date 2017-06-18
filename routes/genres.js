@@ -10,11 +10,19 @@ ref.once("value", function(snapshot) {
 
 router.get('*', function(req, res, next) {
 	// Check Authentication
-	if(firebase.auth().currentUser == null){
-    res.redirect('/users/login');
-	}
-	next();
+	// if(firebase.auth().currentUser == null){
+  //   res.redirect('/users/login');
+	// }
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (!user) {
+      // No user is signed in.
+      res.redirect('/users/login');
+    }
+    next();
+  });
+  // next();
 });
+
 // Genres
 
 
@@ -49,7 +57,7 @@ router.post('/add', function(req, res, next) {
     name: req.body.name,
     uid: firebase.auth().currentUser.uid
   }
-  var genreRef = db.ref('genres');
+  var genreRef = db.ref('genres/');
   genreRef.push().set(genre); // store data in database
   req.flash('success_msg', 'Genre Saved');
   res.redirect('/genres');

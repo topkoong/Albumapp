@@ -4,20 +4,29 @@ var firebase = require('firebase');
 var admin = require("firebase-admin");
 var db = admin.database();
 var multer = require('multer');
-var upload = multer({dest: './public/images/uploads'});
+var upload = multer({dest:'./public/images/uploads'});
+var ref = db.ref("genres");
+
 
 router.get('*', function(req, res, next) {
 	// Check Authentication
-	if(firebase.auth().currentUser == null){
-    res.redirect('/users/login');
-	}
-	next();
+	// if(firebase.auth().currentUser == null){
+  //   res.redirect('/users/login');
+	// }
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (!user) {
+      // No user is signed in.
+      res.redirect('/users/login');
+    }
+    next();
+  });
+  // next();
 });
 
 // Album
 // Fetch data stored in database on album index page
 router.get('/', function(req, res, next) {
-  var albumRef = db.ref("albums");
+  var albumRef = db.ref('albums');
   albumRef.once('value', function(snapshot){
     var albums = [];
     snapshot.forEach(function(childSnapshot){
@@ -44,7 +53,7 @@ router.get('/', function(req, res, next) {
 // We also have to fetch the genre from the database.
 
 router.get('/add', function(req, res, next) {
-  var genreRef = db.ref("genres");
+  var genreRef = ref;
   genreRef.once('value', function(snapshot) {
     var data = [];
     snapshot.forEach(function(childSnapshot) {
@@ -81,7 +90,7 @@ router.post('/add', upload.single('cover'), function(req, res, next) {
     uid: firebase.auth().currentUser.uid
 	}
   // Create Reference
-  var albumRef = db.ref('albums');
+  var albumRef = db.ref('albums/');
 
   // Push Album
   albumRef.push().set(album);
@@ -98,12 +107,8 @@ router.get('/details/:id', function(req, res) {
   var albumRef = db.ref("albums/"+id);
   albumRef.once('value', function(snapshot) {
     var album = snapshot.val();
-    res.render('albums/details', {
-      album: album,
-      id: id
-    });
+    res.render('albums/details', {album: album, id: id});
   });
-
 });
 
 // Update data stored in database on the album edit page
